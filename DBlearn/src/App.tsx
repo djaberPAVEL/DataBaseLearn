@@ -1,22 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
-import ProductList from "./components/ProductList";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+interface User {
+  id: number;
+  name: string;
+}
 
 function App() {
-  const [category, setCategory] = useState("");
-
-  useEffect(() => {});
+  const [users, setUsers] = useState<User[]>([]);
+  useEffect(() => {
+    axios
+      .get<User[]>("https://jsonplaceholder.typicode.com/users")
+      .then((res) => setUsers(res.data));
+  },[]);
   return (
-    <>
-      <select
-        className="from-select"
-        onChange={(event) => setCategory(event.target.value)}
-      >
-        <option value=""></option>
-        <option value="Clothing">Clothing</option>
-        <option value="Household">Household</option>
-      </select>
-      <ProductList category={category} />
-    </>
+    <div>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </div>
   );
 }
 
